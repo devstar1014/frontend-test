@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { FormulaState, FormulaTag } from "../types/formula";
+import type { FormulaState } from "../types/formula";
 
 export const useFormulaStore = create<FormulaState>((set, get) => ({
   formula: [],

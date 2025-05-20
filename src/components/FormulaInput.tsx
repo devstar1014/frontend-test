@@ -1,11 +1,27 @@
 import { useRef, useEffect, useState } from "react";
 import { useFormulaStore } from "../store/formulaStore";
 import { useSuggestions } from "../hooks/useSuggestions";
-import type { SuggestionItem, FormulaTag as FormulaTagType } from "../types/formula";
+import type {
+  SuggestionItem,
+  FormulaTag as FormulaTagType,
+} from "../types/formula";
 import FormulaTag from "./FormulaTag";
 import SuggestionList from "./SuggestionList";
 
-const OPERATORS = ["+", "-", "*", "/", "(", ")", "^", "=", "<", ">", "<=", ">="];
+const OPERATORS = [
+  "+",
+  "-",
+  "*",
+  "/",
+  "(",
+  ")",
+  "^",
+  "=",
+  "<",
+  ">",
+  "<=",
+  ">=",
+];
 
 const isOperator = (char: string): boolean => {
   return OPERATORS.includes(char);
@@ -14,7 +30,7 @@ const isOperator = (char: string): boolean => {
 const FormulaInput = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [cursorIndex, setCursorIndex] = useState<number | null>(null);
+  const [, setCursorIndex] = useState<number | null>(null);
 
   // Get state from Zustand store
   const {
@@ -23,7 +39,6 @@ const FormulaInput = () => {
     showSuggestions,
     selectedSuggestion,
     addToFormula,
-    setFormula,
     setCursorPosition,
     setInputValue,
     setShowSuggestions,
@@ -90,7 +105,9 @@ const FormulaInput = () => {
         setSelectedSuggestion((selectedSuggestion + 1) % suggestions.length);
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
-        setSelectedSuggestion((selectedSuggestion - 1 + suggestions.length) % suggestions.length);
+        setSelectedSuggestion(
+          (selectedSuggestion - 1 + suggestions.length) % suggestions.length
+        );
       } else if (e.key === "Enter" || e.key === "Tab") {
         e.preventDefault();
         handleSelectSuggestion(suggestions[selectedSuggestion]);
@@ -108,7 +125,11 @@ const FormulaInput = () => {
       if (result !== null) {
         console.log("Result:", result);
       }
-    } else if (e.key === "Backspace" && inputValue === "" && formula.length > 0) {
+    } else if (
+      e.key === "Backspace" &&
+      inputValue === "" &&
+      formula.length > 0
+    ) {
       e.preventDefault();
       removeItem(formula.length - 1);
     } else if (isOperator(e.key)) {
@@ -129,7 +150,9 @@ const FormulaInput = () => {
     const clickX = e.clientX - containerRect.left;
 
     // Get all formula elements including the input
-    const elements = containerRef.current.querySelectorAll(".formula-item, input");
+    const elements = containerRef.current.querySelectorAll(
+      ".formula-item, input"
+    );
     let totalWidth = 0;
     let newIndex = 0;
 
@@ -165,7 +188,11 @@ const FormulaInput = () => {
       >
         {formula.map((item: string | FormulaTagType, index: number) => (
           <span key={index} className="formula-item">
-            {typeof item === "string" ? <span className="mx-0.5 text-black">{item}</span> : <FormulaTag tag={item} index={index} onRemove={removeItem} />}
+            {typeof item === "string" ? (
+              <span className="mx-0.5 text-black">{item}</span>
+            ) : (
+              <FormulaTag tag={item} index={index} onRemove={removeItem} />
+            )}
           </span>
         ))}
 
@@ -180,7 +207,13 @@ const FormulaInput = () => {
         />
 
         {/* Show suggestions */}
-        {showSuggestions && <SuggestionList suggestions={suggestions} isLoading={isLoading} onSelect={handleSelectSuggestion} />}
+        {showSuggestions && (
+          <SuggestionList
+            suggestions={suggestions}
+            isLoading={isLoading}
+            onSelect={handleSelectSuggestion}
+          />
+        )}
       </div>
 
       {/* Result display */}
